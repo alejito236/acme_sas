@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('color');
             $table->string('marca');
             $table->string('tipo'); // particular o publico
-            $table->foreignId('cpnductores_id')->constrained('conductores');
+            $table->foreignId('conductores_id')->constrained('conductores');
             $table->foreignId('propietarios_id')->constrained('propietarios');
             $table->timestamps();
         });
