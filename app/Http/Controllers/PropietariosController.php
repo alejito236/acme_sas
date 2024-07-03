@@ -3,15 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Propietario;
 
 class PropietariosController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $search = $request->get('search');
+        $paginate = $request->get('paginate', 10); 
+
+        $propietarios = Propietario::where('cedula', 'like', "%$search%")
+            ->orWhere('primer_nombre', 'like', "%$search%")
+            ->orWhere('segundo_nombre', 'like', "%$search%")
+            ->orWhere('apellidos', 'like', "%$search%")
+            ->orWhere('direccion', 'like', "%$search%")
+            ->orWhere('telefono', 'like', "%$search%")
+            ->orWhere('ciudad', 'like', "%$search%")
+            ->paginate($paginate);
+
+        $datos['propietarios'] = $propietarios;
+        $datos['search'] = $search;
+        $datos['paginate'] = $paginate;
+
+        return view('propietarios.index', $datos);
     }
 
     /**
@@ -19,7 +36,7 @@ class PropietariosController extends Controller
      */
     public function create()
     {
-        //
+        return view('propietarios.create');
     }
 
     /**
@@ -27,7 +44,9 @@ class PropietariosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $datosPropietario = request()->except('_token');
+        Propietario::insert($datosPropietario);
+        return redirect('propietarios')->with('mensaje', 'Propietario guardado con éxito');
     }
 
     /**
@@ -35,7 +54,7 @@ class PropietariosController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // Esta función puede quedarse vacía si no la necesitas
     }
 
     /**
@@ -43,7 +62,8 @@ class PropietariosController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $propietario = Propietario::findOrFail($id);
+        return view('propietarios.edit', compact('propietario'));
     }
 
     /**
@@ -51,7 +71,10 @@ class PropietariosController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $datosPropietario = request()->except(['_token','_method']);
+        Propietario::where('id', '=', $id)->update($datosPropietario);
+        
+        return redirect('propietarios')->with('mensaje', 'Propietario actualizado con éxito');
     }
 
     /**
@@ -59,6 +82,7 @@ class PropietariosController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Propietario::destroy($id);
+        return redirect('propietarios')->with('mensaje','Propietario eliminado con éxito');
     }
 }

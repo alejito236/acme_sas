@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('usuarios', function (Blueprint $table) {
@@ -16,7 +13,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('correo');
+            $table->string('password'); // El campo para almacenar contraseñas encriptadas
             $table->rememberToken();
             $table->timestamps();
         });
@@ -37,9 +34,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('usuarios');

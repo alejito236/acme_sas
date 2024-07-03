@@ -13,13 +13,17 @@ return new class extends Migration
     {
         Schema::create('vehiculos', function (Blueprint $table) {
             $table->id();
-            $table->string('placa')->unique();
+            $table->string('placa');
             $table->string('color');
             $table->string('marca');
-            $table->string('tipo'); // particular o publico
-            $table->foreignId('conductores_id')->constrained('conductores');
-            $table->foreignId('propietarios_id')->constrained('propietarios');
+            $table->string('tipo');
+            $table->unsignedBigInteger('conductores_id');
+            $table->unsignedBigInteger('propietarios_id');
             $table->timestamps();
+
+           
+            $table->foreign('conductores_id')->references('id')->on('conductores')->onDelete('cascade');
+            $table->foreign('propietarios_id')->references('id')->on('propietarios')->onDelete('cascade');
         });
     }
 
